@@ -64,8 +64,3 @@ Contributions are welcome! Please follow these steps:
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-## Contact
-
-Your Name - [@your_twitter](https://twitter.com/your_twitter)
-
-Project Link: [https://github.com/yourusername/apex-analysis](https://github.com/yourusername/apex-analysis)
