@@ -1,0 +1,28 @@
+{
+  "ticker": "NVDA",
+  "timestamp": "2025-10-28T02:14:15.574112",
+  "price_data_points": 250,
+  "news_articles_analyzed": 20,
+  "sentiment_summary": {
+    "average": 0.08776900000000001,
+    "count": 20,
+    "strongly_positive": 5,
+    "positive": 2,
+    "neutral": 11,
+    "negative": 0,
+    "strongly_negative": 2,
+    "keywords": [
+      "rally",
+      "soar",
+      "jump",
+      "rise",
+      "buy",
+      "beat"
+    ]
+  },
+  "saved_files": [
+    "/workspaces/Apex-Analysis/reports/NVDA/NVDA_price_data_20251028_021415.csv",
+    "/workspaces/Apex-Analysis/reports/NVDA/NVDA_news_20251028_021415.json"
+  ],
+  "error": null
+}

@@ -8,17 +8,18 @@ import pickle
 import requests
 from typing import Optional, Any, Dict, List
 
+from src.config import REPORTS_DIR  # centralize reports dir in config
+
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Constants
-REPORTS_DIR = Path('reports')
+# Cache directory
 CACHE_DIR = Path('.cache')
 
 # Ensure directories exist
-REPORTS_DIR.mkdir(exist_ok=True)
-CACHE_DIR.mkdir(exist_ok=True)
+# REPORTS_DIR is created by src.config; ensure cache exists here
+CACHE_DIR.mkdir(exist_ok=True, parents=True)
 
 def handle_errors(func):
     @wraps(func)
@@ -43,7 +44,7 @@ def clean_text(text: str) -> str:
 
 def get_company_dir(ticker: str) -> Path:
     """Get or create a directory for a company's reports."""
-    company_dir = REPORTS_DIR / ticker.upper()
+    company_dir = Path(REPORTS_DIR) / ticker.upper()
     company_dir.mkdir(exist_ok=True, parents=True)
     return company_dir
 

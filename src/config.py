@@ -4,8 +4,10 @@ from datetime import datetime
 
 # File paths
 BASE_DIR = Path(__file__).parent.absolute()
-CACHE_DIR = BASE_DIR / 'cache'
-REPORTS_DIR = BASE_DIR / 'reports'
+# Put cache and reports at the repository root (one level above src)
+REPO_ROOT = BASE_DIR.parent
+CACHE_DIR = REPO_ROOT / 'cache'
+REPORTS_DIR = REPO_ROOT / 'reports'
 
 # Ensure directories exist
 CACHE_DIR.mkdir(parents=True, exist_ok=True)

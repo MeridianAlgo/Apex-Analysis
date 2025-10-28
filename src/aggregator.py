@@ -8,19 +8,16 @@ import json
 from src.fetch_data import fetch_stock_data
 from src.news_processor import fetch_news_rss
 from src.sentiment_analyzer import batch_analyze
-from src.utils import logger
+from src.utils import logger, get_company_dir as utils_get_company_dir
+import pandas as pd
 
 def get_company_dir(ticker: str) -> Path:
+    """Return the canonical company reports directory (delegates to utils).
+
+    This delegates to src.utils.get_company_dir so all modules use the same
+    REPORTS_DIR from the central config.
     """
-    Get the directory path for storing reports for a given ticker.
-    
-    Args:
-        ticker: Stock ticker symbol
-        
-    Returns:
-        Path: Path object pointing to the company's report directory
-    """
-    return Path("reports") / ticker.upper()
+    return utils_get_company_dir(ticker)
 
 def calculate_sentiment_metrics(analyzed_news: List[Dict[str, Any]]) -> Dict[str, Any]:
     """
@@ -152,6 +149,12 @@ def aggregate_analysis(ticker: str, period: str = '1y', num_articles: int = 20) 
                     
                     saved_path = str(price_file.absolute())
                     result['saved_files'].append(saved_path)
+                    # Keep both raw DataFrame (for plotting) and a JSON-serializable
+                    # representation for the aggregated result.
+                    try:
+                        result['price_history'] = stock_data['history']
+                    except Exception:
+                        result['price_history'] = None
                     result['price_data'] = stock_data['history'].to_dict(orient='records')
                     logger.info(f"Successfully saved price data to {saved_path}")
                 except Exception as e:
@@ -179,6 +182,28 @@ def aggregate_analysis(ticker: str, period: str = '1y', num_articles: int = 20) 
                 else:
                     result['news'] = analyzed_news
                     result['sentiment'] = calculate_sentiment_metrics(analyzed_news)
+
+                    # Build a sentiment DataFrame (date -> sentiment score) for plotting
+                    try:
+                        sent_df = pd.DataFrame([
+                            {
+                                'date': a.get('date') if a.get('date') is not None else a.get('analysis_timestamp'),
+                                'sentiment': a.get('sentiment', 0.0),
+                                'title': a.get('title', '')
+                            }
+                            for a in analyzed_news
+                        ])
+                        if not sent_df.empty:
+                            # Convert date column to datetime and set as index
+                            sent_df['date'] = pd.to_datetime(sent_df['date'], errors='coerce')
+                            # If all dates are NaT, keep numeric index
+                            if sent_df['date'].notna().any():
+                                sent_df = sent_df.set_index('date').sort_index()
+                            result['sentiment_data'] = sent_df
+                        else:
+                            result['sentiment_data'] = pd.DataFrame()
+                    except Exception:
+                        result['sentiment_data'] = pd.DataFrame()
                     
                     # Save news data
                     news_file = ticker_dir / f"{ticker}_news_{timestamp}.json"
@@ -199,11 +224,15 @@ def aggregate_analysis(ticker: str, period: str = '1y', num_articles: int = 20) 
         # 3. Always generate and save summary, even if some parts failed
         try:
             logger.info("Generating summary report...")
+            # Use safe defaults in case parts of the result are None
+            price_data_list = result.get('price_data') or []
+            news_list = result.get('news') or []
+
             summary = {
                 'ticker': result['ticker'],
                 'timestamp': result['timestamp'],
-                'price_data_points': len(result.get('price_data', [])),
-                'news_articles_analyzed': len(result.get('news', [])),
+                'price_data_points': len(price_data_list),
+                'news_articles_analyzed': len(news_list),
                 'sentiment_summary': result.get('sentiment', {}),
                 'saved_files': result.get('saved_files', []),
                 'error': result.get('error')

@@ -1,0 +1,9 @@
+{
+  "ticker": "TEST",
+  "timestamp": "2025-10-28T02:07:45.799657",
+  "price_data_points": 0,
+  "news_articles_analyzed": 0,
+  "sentiment_summary": {},
+  "saved_files": [],
+  "error": "No price data available for TEST"
+}

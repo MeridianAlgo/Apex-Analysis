@@ -1,0 +1,309 @@
+[
+  {
+    "title": "NVIDIA Corporation $NVDA Shares Sold by BankPlus Trust Department - MarketBeat",
+    "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPSHZ0ZG9WcWtSaURKUUtsdGRHeXhidllJUmFkMDBOTTBadUc0aGVZRnVrdGRwR0NBR3NITmFRQlRZdXZIX1ozSEptLUhWWXFCclFyYUN6NDNVNnU4cmVfVGI2U3FHTUVTZTgxbk9qZmZnRHRwY002dU4yU3lsZngxMUw2M1lsdlp3cUNQRnJoMy10X2ZoXzRlS3FVRGZWcEFnTlduZ1RjWUlTSmM0bkNaY0JtaFc3RnVRdnByaG94QVRsSGM?oc=5",
+    "date": "2025-10-27 07:18:54",
+    "source": "MarketBeat",
+    "sentiment": 0.5624,
+    "sentiment_label": "strongly_positive",
+    "sentiment_confidence": 0.24,
+    "sentiment_keywords": [
+      "beat"
+    ],
+    "vader_score": 0.6705,
+    "textblob_score": 0.0,
+    "word_count": 9,
+    "analysis_timestamp": "2025-10-28T02:14:16.959434"
+  },
+  {
+    "title": "Nvidia (NVDA) Stock Rallies on AI Boom, Trade Optimism \u2013 Analysts Weigh Competition & Outlook - ts2.tech",
+    "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQUkN6Nzg2QTNaZ3hQN1B3MTlNemNFeHVQR1IyTjhvb3FuMkdFNGVXSG5YRFZUelV5TVBxdXhUeGJ4WTVXTXR0b0d2YkoxaUI3NDhzaENwazRnZjI2dnlIQVAtenpaRDl3Q3pGU1NoZjF1MlZndmJSRkNJSXplN05VdTJPNmlCekpWSWhrSkwwLWlDWnJiWk5CdjM3eW5ZdUFNLW0yMmFDVDRFVDQ?oc=5",
+    "date": "2025-10-27 22:15:56",
+    "source": "ts2.tech",
+    "sentiment": 0.5423,
+    "sentiment_label": "strongly_positive",
+    "sentiment_confidence": 0.13,
+    "sentiment_keywords": [],
+    "vader_score": 0.5423,
+    "textblob_score": 0.0,
+    "word_count": 13,
+    "analysis_timestamp": "2025-10-28T02:14:16.957778"
+  },
+  {
+    "title": "If I Could Buy Only 1 \"Magnificent Seven\" Stock Over the Next 10 Years, This Would Be It (Hint: Not Nvidia) - Nasdaq",
+    "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPdUdNdlBSYU81NkdCOElBbk96cmRpSm5MWjVqdFkzaS05dnVGaWhDQ0Q1OVlkbEZwUnhTYTdFOElJeGpVd0NxTTdxcHdrWlF4SHhZa2xDTVBRNlMtR2JYOHJCU2FwLVBaZW9pWC1UUkM0TXVVUF9OQVZjVmJRNW1ZVmFSb1VqT0tFamkxNHlXdG9EU3JyMkpvRXlNRk14WUJ1WG9VSjk1Nk82WWpEenRGdVZ3Tk1XY0Z0?oc=5",
+    "date": "2025-10-26 23:02:00",
+    "source": "Nasdaq",
+    "sentiment": 0.5035200000000001,
+    "sentiment_label": "strongly_positive",
+    "sentiment_confidence": 0.26,
+    "sentiment_keywords": [
+      "buy"
+    ],
+    "vader_score": 0.5994,
+    "textblob_score": 0.5,
+    "word_count": 11,
+    "analysis_timestamp": "2025-10-28T02:14:16.956781"
+  },
+  {
+    "title": "Qualcomm Launches AI Chips to Challenge Nvidia\u2019s Dominance - The Wall Street Journal",
+    "link": "https://news.google.com/rss/articles/CBMigwNBVV95cUxPNEQtRklRbmVTczNMQlk0VTBHeHowTWpIemhBMWRRRm1STVdmbUEyWk1YcEo0ZWVPcGtUSnhPcmRCYWlHc1JjRlhmeFdENXB5ekw3WXJ5TXdPQmxSaVliQlBtWXM2ajAyYVdGT1d6SDltU3Y0Q1M4T2I0Vkl2NGxrRGZzT2V1NFVMcFVRVVl6aXREb1FuWHBCLVdjNHJNcXlEZHpGeWhWRVBSa2FXVnNNNjhXZnp0QTA5TDlrc0pLeGlHdE9Hd09UVXBOOTk2QzN5Tk9BZENraDMtS3JoX2d0UVJ3MDkxYkpRSndnMU9OeUlmelVLT3J3OWlCVkJuWEpxX2s1X2xGdHFBX1BoNS16UWNtQ3JuUnhDNjJHcXNNQm1GMWZ0ZUdsRWlxSXN1WjJ3ZUozem84RFFRVFBfRzh2Sk9xX3NLeHNWOVo4ZUdza2hvc1ZyemFCM0FGamh6dVZ3WDNPTnpTQVU0REhCTG5iM3FGemg0eThDSnpxTDAzT2Q1N0U?oc=5",
+    "date": "2025-10-27 16:35:00",
+    "source": "The Wall Street Journal",
+    "sentiment": 0.2732,
+    "sentiment_label": "strongly_positive",
+    "sentiment_confidence": 0.1,
+    "sentiment_keywords": [],
+    "vader_score": 0.2732,
+    "textblob_score": 0.0,
+    "word_count": 9,
+    "analysis_timestamp": "2025-10-28T02:14:16.962252"
+  },
+  {
+    "title": "Nvidia Rises While AI Rival Soars On New Data Center Chip; Is Nvidia A Buy Now? - Investor's Business Daily",
+    "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxQQy1uY3plQ3JkQTBGeThYU1plbWZ4QUFDbHkwVW1Ia3BYRVI3MERzc3dFbHVjaDJmanFHMDZSZnA4SmloZS1UX2NCV3hkNlZiS3ZSQTNOZzRiRUNYRFlybm1lVWs1Z1hjWVhBVlpPVzRoNXNqOFF5alNXdlozaU9oNkJvUFhZa0E?oc=5",
+    "date": "2025-10-27 17:04:00",
+    "source": "Investor's Business Daily",
+    "sentiment": 0.22800000000000004,
+    "sentiment_label": "strongly_positive",
+    "sentiment_confidence": 0.58,
+    "sentiment_keywords": [
+      "soar",
+      "rise",
+      "buy"
+    ],
+    "vader_score": 0.0,
+    "textblob_score": 0.012121212121212116,
+    "word_count": 13,
+    "analysis_timestamp": "2025-10-28T02:14:16.966592"
+  },
+  {
+    "title": "Dow Jones Futures: Nvidia, Microsoft, Palantir, Tesla In Buy Zones After Stock Market Rally - Investor's Business Daily",
+    "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPeS1sVmdXQ3lGcjNhYm90aUg3akhEcDdaTU5fWmtSM3lJR3RKVWFvdVlKTG5QMjJjM0E1UTlXMkc2SHowYUk0Mm5lSTlYMTA5S1Vkb2FYdW5RcGlUbGd5NlNZZV9aUDZtVkZfdGxJTDZ4eGEycGtGcHZ6UnRyaGF3SXE2bV9sSkhPbGJIc1ktb0txMjhGODJaNjlrV1ZzeGxzQzdpd3lvQ3RBcmhWUEpMVg?oc=5",
+    "date": "2025-10-28 00:12:00",
+    "source": "Investor's Business Daily",
+    "sentiment": 0.10800000000000001,
+    "sentiment_label": "positive",
+    "sentiment_confidence": 0.44999999999999996,
+    "sentiment_keywords": [
+      "rally",
+      "buy"
+    ],
+    "vader_score": 0.0,
+    "textblob_score": 0.0,
+    "word_count": 15,
+    "analysis_timestamp": "2025-10-28T02:14:16.961811"
+  },
+  {
+    "title": "Prediction: This Unstoppable AI Stock Will Join Nvidia, Microsoft, Apple, and Alphabet in the $3 Trillion Club by 2029 - Yahoo Finance",
+    "link": "https://news.google.com/rss/articles/CBMiigFBVV95cUxOOVJYUXcwOEJKQjZLS0ltVVdLZjVrZmpqaFczeV9helhLOWZvZlRDS0E3SnJ6VXNEOWMzXzVtUllEZ0h6WjFlLXpYZ0MzaHpvaWRPQ0xIUURaYWF1YmJwcTVkNFd2cXpZMG1oTE9MRmwxYkp0dWxHbkVITzd5eWlXekhlR2R2eG1fTHc?oc=5",
+    "date": "2025-10-27 10:30:00",
+    "source": "Yahoo Finance",
+    "sentiment": 0.1027,
+    "sentiment_label": "positive",
+    "sentiment_confidence": 0.13,
+    "sentiment_keywords": [],
+    "vader_score": 0.1027,
+    "textblob_score": 0.0,
+    "word_count": 13,
+    "analysis_timestamp": "2025-10-28T02:14:16.960335"
+  },
+  {
+    "title": "Prediction: Nvidia Stock Is Going to Soar After Nov. 20 - Yahoo Finance",
+    "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxOWnp4cWVmdFZzYndWdEJYSFh4V0hMUVN2LTd3WW1DV1Y1dTVUY1dBRll5aEVYa3hkZVV1Mmg1UUw3LXNwdVF5U3N1WXRFY3RLQlpid1ZQMWNPVUlMUWVPUndFbUZ2ME5idWhYYmNSTC1TTnBxRnM3aHJsZzgtY0V2SU04RjB0MW8?oc=5",
+    "date": "2025-10-25 07:25:00",
+    "source": "Yahoo Finance",
+    "sentiment": 0.030000000000000006,
+    "sentiment_label": "neutral",
+    "sentiment_confidence": 0.22999999999999998,
+    "sentiment_keywords": [
+      "soar"
+    ],
+    "vader_score": 0.0,
+    "textblob_score": 0.0,
+    "word_count": 8,
+    "analysis_timestamp": "2025-10-28T02:14:16.964510"
+  },
+  {
+    "title": "Qualcomm stock jumps 11% as company enters AI chip race, taking on Nvidia, AMD - Yahoo Finance",
+    "link": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPcDlnekg0aV9CMjBEdUxjQWJ6UGlxdlNQQ3ZueENWNjNRWGY5SmxnNkxrRjRqUzJGMjJhQTFSRUJOeXNmekFETkFlT3k5b3JLeDZZbHBjOWszTzlpN1h2U2JGbTQxbzdhNWgwd0U2WXJhdHhFUDRsemVSS1pGNFZFM1lHZW9rZ0pPVGZSYnNXYlFKdVNUcGhjQlhqSFdlczE3WVdOZG5CLUs0RFpNSnVQdDBFNlUwcjRlc2lhUFNn?oc=5",
+    "date": "2025-10-27 20:07:50",
+    "source": "Yahoo Finance",
+    "sentiment": 0.026000000000000002,
+    "sentiment_label": "neutral",
+    "sentiment_confidence": 0.27,
+    "sentiment_keywords": [
+      "jump"
+    ],
+    "vader_score": 0.0,
+    "textblob_score": 0.0,
+    "word_count": 12,
+    "analysis_timestamp": "2025-10-28T02:14:16.958211"
+  },
+  {
+    "title": "Prediction: Nvidia Stock Could Reach $360 Sooner Than You Think - Nasdaq",
+    "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxQRzZRU2llUDVVV0w4UzJFUFpBTXMtQ3RnZzA4blNNZll5cVB5NUozTGxUX2IwaDB5bnM0OG9MWlRoenVRZ01rODN2REQ0X1ZKUi1RRTNNT1lFMS05R2laaUo4eDg3Zmg2dWdrcjhVT0lCS0FZRVZjdERWMGtOQUJCelM4dTZ1c2ZiQWdqamp4Q2ZZQQ?oc=5",
+    "date": "2025-10-27 13:59:00",
+    "source": "Nasdaq",
+    "sentiment": 0.0258,
+    "sentiment_label": "neutral",
+    "sentiment_confidence": 0.1,
+    "sentiment_keywords": [],
+    "vader_score": 0.0258,
+    "textblob_score": 0.0,
+    "word_count": 9,
+    "analysis_timestamp": "2025-10-28T02:14:16.965553"
+  },
+  {
+    "title": "Should You Buy Nvidia (NVDA) Stock Before Nov. 19?? - Yahoo Finance",
+    "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE5iYmhWUFlfeGVDMklINnVPWGZNVm9LNXBaMWVjQzhKNDBKalQyNmJreXZnb2dNM09kX0tqMmxnX0Npek5WMldQNWxIczZiWVBmNWZDYkc5X1JySlJuUGZKWTJkR0FhRU9xaVE1Z0xsc2NFUkJDV3E5cVhpVQ?oc=5",
+    "date": "2025-10-26 17:02:00",
+    "source": "Yahoo Finance",
+    "sentiment": 0.024,
+    "sentiment_label": "neutral",
+    "sentiment_confidence": 0.22,
+    "sentiment_keywords": [
+      "buy"
+    ],
+    "vader_score": 0.0,
+    "textblob_score": 0.0,
+    "word_count": 7,
+    "analysis_timestamp": "2025-10-28T02:14:16.956097"
+  },
+  {
+    "title": "Should You Buy Nvidia (NVDA) Stock Before Nov. 19?? - Nasdaq",
+    "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE55QlBrdTlzU3FOZ09SVjVSRXN1S0FCZjY4Zzg2OWJZeDdOYjd3QWxYSC1Hd0pXWEs4dkFxT2cwSFlQX3ZVX0ZCZDMtbkJzOVAwVnVqUy05Um1xTUFqRW1oSC14UmxCdW1xM1pBQXVTbmxTTENiOFlJQk1OMA?oc=5",
+    "date": "2025-10-26 17:02:00",
+    "source": "Nasdaq",
+    "sentiment": 0.024,
+    "sentiment_label": "neutral",
+    "sentiment_confidence": 0.21,
+    "sentiment_keywords": [
+      "buy"
+    ],
+    "vader_score": 0.0,
+    "textblob_score": 0.0,
+    "word_count": 6,
+    "analysis_timestamp": "2025-10-28T02:14:16.960716"
+  },
+  {
+    "title": "Nvidia Stock Just Got a New Street-High Price Target. Should You Buy NVDA Now? - Barchart.com",
+    "link": "https://news.google.com/rss/articles/CBMivgFBVV95cUxOcEtoM0xuUmhjeXRxWDFhVlZkNUlGTTJXTlJ6ekpBVW0wWDFLdlJkaG56NGk5S1c0NTV0MGtBTjFLNVN4VjNxVjd0T1ZkSkhvUFJDY3N1dXI2REs2cVlTNmdwZ3pVbFQ2WmQ3X2p1dVhHVWZkTE9zbTQ1UFJ0OVExZXJTT2t5bGVxVk1fcFJiR2lmd2E5ckFqVVNaWlVHaEtNS04tMTExdmFvcVEzeFkya0V4RVMyamMxZEl3UlBB?oc=5",
+    "date": "2025-10-27 13:00:03",
+    "source": "Barchart.com",
+    "sentiment": 0.024,
+    "sentiment_label": "neutral",
+    "sentiment_confidence": 0.27,
+    "sentiment_keywords": [
+      "buy"
+    ],
+    "vader_score": 0.0,
+    "textblob_score": 0.1481818181818182,
+    "word_count": 12,
+    "analysis_timestamp": "2025-10-28T02:14:16.965057"
+  },
+  {
+    "title": "Most semiconductor stocks rise as earnings season heats up, deals mount (NVDA:NASDAQ) - Seeking Alpha",
+    "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxNT0hQNjhMMXFrRUZzUEluSy1oaDc0TEVvVnoxOWF0R3hFeGhjSnMxSm5PanFYN09FaS1neUdHbXVDclZoNzh3ZHlTcE5KSmVWaTRrRS1ZM0hhX0FoeVVsRjB5TEQ2UkxRYU5GZVM3RXNySlVFTDd0UTFMQnEweWRwV3pjdjIwLWk3TnExNGFYNF8wNFZsYVl3MkRhNHp6M2hwY3daU0tzZUhKbFdK?oc=5",
+    "date": "2025-10-27 18:31:56",
+    "source": "Seeking Alpha",
+    "sentiment": 0.022000000000000006,
+    "sentiment_label": "neutral",
+    "sentiment_confidence": 0.27,
+    "sentiment_keywords": [
+      "rise"
+    ],
+    "vader_score": 0.0,
+    "textblob_score": 0.0,
+    "word_count": 12,
+    "analysis_timestamp": "2025-10-28T02:14:16.957228"
+  },
+  {
+    "title": "What's Going On With The Rise In Nvidia Stock Today? - Benzinga",
+    "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxOdUxUOWhySlZVM0Y3QU1nYTg5aS1KSmRBdW1Jb3BoYkgxTjVCQXo1TF9ydXNlVUItdU9jWE5Jenc2R0YzbDhVaDZpN2pNVGdnQ01WQmRvM1lyak9zT1dIZV9IUVJsNFhEajBlcE15MnVVZjRxLWF2eUhvQ0NXanRDTm80SUloSFd1VTRGU2tmUXJUdmdiWFZ3OTFwTkJjWk1wQ1VRbTNfVXJEZ2t1bkFwQQ?oc=5",
+    "date": "2025-10-24 18:28:56",
+    "source": "Benzinga",
+    "sentiment": 0.022000000000000006,
+    "sentiment_label": "neutral",
+    "sentiment_confidence": 0.21,
+    "sentiment_keywords": [
+      "rise"
+    ],
+    "vader_score": 0.0,
+    "textblob_score": 0.0,
+    "word_count": 6,
+    "analysis_timestamp": "2025-10-28T02:14:16.958624"
+  },
+  {
+    "title": "Stock Movers: Nvidia, Avidity, Carter's - Bloomberg.com",
+    "link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOdGotbFRsV1dZSDRDOVlWUVZMVkwwaWp1ZjlxUlJCX0U1QnZBQnluekFxWjdDcktfSzR3T1JvS195R2g2anVLdE9QTkZucXlZQVFoM0NpZTBBMjBuM2VvU1lFV3NNMG5vZlQ2b2RuSUhDd2hyRHJFTUVPTDg3MHRTRGhMTkFJTXU0R24tRjh4RFRJRXd0TTZv?oc=5",
+    "date": "2025-10-27 11:07:43",
+    "source": "Bloomberg.com",
+    "sentiment": 0.0,
+    "sentiment_label": "neutral",
+    "sentiment_confidence": 0.1,
+    "sentiment_keywords": [],
+    "vader_score": 0.0,
+    "textblob_score": 0.0,
+    "word_count": 7,
+    "analysis_timestamp": "2025-10-28T02:14:16.959786"
+  },
+  {
+    "title": "Here are Monday's biggest analyst calls: Nvidia, Microsoft, Berkshire, Apple, Tesla, Honeywell & more - CNBC",
+    "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPMllacUhyZEhzNS1KYnVoQzZDNnkxS25JcDJ6SElaT29YcHJOQ2Q4dVBPVFpHWURmb3FCUXZnWUxnM1lpejBOQ1NZQ1BwTWpJVGVyR2FSb1hXbWQwT2daWVE5a21LRXEwNzJaWGNqcXMtT1llaXo4Zld3M3E2OUFNY1JjSlJGdTR6?oc=5",
+    "date": "2025-10-27 12:10:56",
+    "source": "CNBC",
+    "sentiment": 0.0,
+    "sentiment_label": "neutral",
+    "sentiment_confidence": 0.11,
+    "sentiment_keywords": [],
+    "vader_score": 0.0,
+    "textblob_score": 0.0,
+    "word_count": 11,
+    "analysis_timestamp": "2025-10-28T02:14:16.962690"
+  },
+  {
+    "title": "Nvidia (NASDAQ: NVDA) Stock Price Prediction for 2025: Where Will It Be in 1 Year (Oct 22) - Yahoo Finance",
+    "link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxNUkdOVXp4eVlqUHd3QlhmMXcxVWpDci1DUmRwNlk4RUJPSU95QldUSHFBZXUtR0d3TktxR2s5dlA2UWNpMXU5aGtvZkdhZlFxRUtpNWcxcElCUzV3aWdiVjRMNFJFc1VKdEswWTJoVzBXaHJzeU5fMlhpQUNqbnUyNlNn?oc=5",
+    "date": "2025-10-22 13:10:16",
+    "source": "Yahoo Finance",
+    "sentiment": 0.0,
+    "sentiment_label": "neutral",
+    "sentiment_confidence": 0.11,
+    "sentiment_keywords": [],
+    "vader_score": 0.0,
+    "textblob_score": 0.0,
+    "word_count": 11,
+    "analysis_timestamp": "2025-10-28T02:14:16.966078"
+  },
+  {
+    "title": "3 Tech Stocks Beating Nvidia This Year That Still Look Cheap - 24/7 Wall St.",
+    "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPaEowNTlSSmdXQmlGdF9ZaUJJckhxTTFuS1ItUEZFUHRjeGFxSXFCcW9xVV9ZdE4ybDNJUmw0VkVBT2tVZ2VsNkEwSVRqQzNQVkZNZHpDeW0zdmljZFlHcGdRM0lZR3NDdjlXMy1vOEtDR3ZSWkFXb3RsNVlxczgzWF9yU2N4ZUR6NU83Y1Z5T0FIemdGdFhzUloyV0NRcXJETnBQbjZoOA?oc=5",
+    "date": "2025-10-24 16:30:23",
+    "source": "24/7 Wall St.",
+    "sentiment": -0.34104,
+    "sentiment_label": "strongly_negative",
+    "sentiment_confidence": 0.24,
+    "sentiment_keywords": [
+      "beat"
+    ],
+    "vader_score": -0.4588,
+    "textblob_score": 0.4,
+    "word_count": 9,
+    "analysis_timestamp": "2025-10-28T02:14:16.959044"
+  },
+  {
+    "title": "Prediction: Nvidia Stock Could Reach $360 Sooner Than You Think - The Motley Fool",
+    "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOclNITmNXQ2lULVQtZksyLTdFcGFua19RWGdZbWxtTk81Q2JQa1dyTE1RYUM3djUyc1VBTXVWUVM5ZnUyVDJ6eHczb0JnV2ZneEs0UmlQc05faDV1Vy1fMloyRXJhRmNTdnlEcUZtbkZBNzU4TWVvT1l5bFFlOXNESE5vM1RDQkljdlowOTN1SGhXQmIxNEdxdQ?oc=5",
+    "date": "2025-10-27 13:59:00",
+    "source": "The Motley Fool",
+    "sentiment": -0.4215,
+    "sentiment_label": "strongly_negative",
+    "sentiment_confidence": 0.1,
+    "sentiment_keywords": [],
+    "vader_score": -0.4215,
+    "textblob_score": 0.6,
+    "word_count": 10,
+    "analysis_timestamp": "2025-10-28T02:14:16.961252"
+  }
+]
