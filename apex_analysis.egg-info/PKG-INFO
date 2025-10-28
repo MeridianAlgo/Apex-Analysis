@@ -1,3 +1,41 @@
+Metadata-Version: 2.4
+Name: apex_analysis
+Version: 1.0.0
+Summary: Apex Analysis - Stock market analysis tool with sentiment analysis
+Home-page: https://github.com/yourusername/apex-analysis
+Author: Your Name
+Author-email: your.email@example.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: yfinance>=0.2.3
+Requires-Dist: pandas>=1.3.0
+Requires-Dist: numpy>=1.21.0
+Requires-Dist: matplotlib>=3.4.0
+Requires-Dist: textblob>=0.17.1
+Requires-Dist: feedparser>=6.0.8
+Requires-Dist: beautifulsoup4>=4.9.3
+Requires-Dist: requests>=2.26.0
+Requires-Dist: PyYAML>=5.4.1
+Requires-Dist: nltk>=3.8.1
+Requires-Dist: python-dateutil>=2.8.2
+Requires-Dist: pytz>=2022.1
+Requires-Dist: scikit-learn>=1.0.2
+Requires-Dist: tqdm>=4.62.0
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
 # Apex Analysis
 
 A comprehensive stock analysis tool that combines price data with news sentiment analysis to provide insights into stock performance.
