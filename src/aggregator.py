@@ -1,276 +1,205 @@
-import pandas as pd
-import numpy as np
-from pathlib import Path
-from datetime import datetime
-from typing import Dict, Any, Optional, List
 import json
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Union
+
+import numpy as np
+import pandas as pd
 
 from src.fetch_data import fetch_stock_data
 from src.news_processor import fetch_news_rss
 from src.sentiment_analyzer import batch_analyze
-from src.utils import logger, get_company_dir as utils_get_company_dir
-import pandas as pd
+from src.utils import (
+    logger,
+    get_company_dir as utils_get_company_dir,
+    save_dataframe,
+    save_json,
+)
+
 
 def get_company_dir(ticker: str) -> Path:
-    """Return the canonical company reports directory (delegates to utils).
-
-    This delegates to src.utils.get_company_dir so all modules use the same
-    REPORTS_DIR from the central config.
-    """
     return utils_get_company_dir(ticker)
 
-def calculate_sentiment_metrics(analyzed_news: List[Dict[str, Any]]) -> Dict[str, Any]:
-    """
-    Calculate sentiment metrics from analyzed news articles.
-    
-    Args:
-        analyzed_news: List of analyzed news articles with sentiment data
-        
-    Returns:
-        Dict containing sentiment metrics
-    """
-    if not analyzed_news:
+
+def _normalize_tickers(tickers: Union[str, List[str]]) -> List[str]:
+    if isinstance(tickers, str):
+        raw = tickers.split(",")
+    else:
+        raw = tickers
+    return [t.strip().upper() for t in raw if t and t.strip()]
+
+
+def calculate_sentiment_metrics(rows):
+    if not rows:
         return {}
-        
-    sentiment_scores = [
-        n.get('sentiment', 0) 
-        for n in analyzed_news 
-        if 'sentiment' in n
-    ]
-    
-    if not sentiment_scores:
+    scores = []
+    for r in rows:
+        s = r.get("sentiment")
+        if isinstance(s, (int, float)):
+            scores.append(float(s))
+    if not scores:
         return {}
-        
-    # Extract unique keywords from all articles
-    keywords = {
-        kw 
-        for article in analyzed_news 
-        for kw in article.get('sentiment_keywords', [])
-    }
-    
+    keywords = set()
+    for r in rows:
+        kws = r.get("sentiment_keywords")
+        if isinstance(kws, (list, tuple, set)):
+            for kw in kws:
+                keywords.add(str(kw))
     return {
-        'average': float(np.mean(sentiment_scores)),
-        'count': len(sentiment_scores),
-        'strongly_positive': len([s for s in sentiment_scores if s >= 0.15]),
-        'positive': len([s for s in sentiment_scores if 0.05 <= s < 0.15]),
-        'neutral': len([s for s in sentiment_scores if -0.05 < s < 0.05]),
-        'negative': len([s for s in sentiment_scores if -0.15 < s <= -0.05]),
-        'strongly_negative': len([s for s in sentiment_scores if s <= -0.15]),
-        'keywords': list(keywords)
+        "average": float(np.mean(scores)),
+        "count": len(scores),
+        "strongly_positive": len([s for s in scores if s >= 0.15]),
+        "positive": len([s for s in scores if 0.05 <= s < 0.15]),
+        "neutral": len([s for s in scores if -0.05 < s < 0.05]),
+        "negative": len([s for s in scores if -0.15 < s <= -0.05]),
+        "strongly_negative": len([s for s in scores if s <= -0.15]),
+        "keywords": list(keywords),
     }
 
-def save_report(data: Any, filepath: Path) -> Path:
-    """
-    Save data to a file with proper error handling and directory creation.
-    
-    Args:
-        data: Data to be saved (will be JSON serialized)
-        filepath: Path where to save the file
-        
-    Returns:
-        Path: The actual path where the file was saved
-        
-    Raises:
-        Exception: If there's an error saving the file
-    """
-    try:
-        # Convert to Path object if it's a string
-        filepath = Path(filepath)
-        
-        # Ensure the directory exists
-        filepath.parent.mkdir(parents=True, exist_ok=True)
-        
-        # Save the file
-        with open(filepath, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2, default=str)
-            
-        # Verify the file was created
-        if not filepath.exists():
-            raise FileNotFoundError(f"Failed to create file: {filepath}")
-            
-        logger.info(f"Successfully saved report to {filepath.absolute()}")
-        return filepath.absolute()
-        
-    except Exception as e:
-        error_msg = f"Error saving report to {filepath}: {str(e)}"
-        logger.error(error_msg, exc_info=True)
-        raise Exception(error_msg)
 
-def aggregate_analysis(ticker: str, period: str = '1y', num_articles: int = 20) -> Dict[str, Any]:
-    """
-    Aggregate all analysis for a given ticker and save results to reports directory.
-    
-    Args:
-        ticker: Stock ticker symbol
-        period: Time period for historical data (e.g., '1y', '6mo')
-        num_articles: Number of news articles to analyze
-        
-    Returns:
-        dict: Aggregated analysis results with 'saved_files' list and 'error' if any
-    """
-    logger.info(f"Starting analysis for {ticker}")
-    
-    # Initialize response with default values
-    result = {
-        'ticker': ticker.upper(),
-        'timestamp': datetime.now().isoformat(),
-        'price_data': None,
-        'sentiment': {},
-        'news': [],
-        'saved_files': [],
-        'error': None
-    }
-    
-    ticker_dir = None
-    try:
-        # 0. Setup directories
-        ticker_dir = get_company_dir(ticker.upper())
-        ticker_dir.mkdir(parents=True, exist_ok=True)
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        
-        # 1. Fetch and save stock data
-        logger.info(f"Fetching stock data for {ticker}...")
-        try:
-            stock_data = fetch_stock_data(ticker, period)
-            if not stock_data or 'history' not in stock_data or stock_data['history'].empty:
-                logger.warning(f"No price data available for {ticker}")
-                result['error'] = f"No price data available for {ticker}"
-            else:
-                # Save price data
-                price_file = ticker_dir / f"{ticker}_price_data_{timestamp}.csv"
-                try:
-                    # Ensure directory exists
-                    price_file.parent.mkdir(parents=True, exist_ok=True)
-                    # Save the file
-                    stock_data['history'].to_csv(price_file, index=False)
-                    # Verify it was created
-                    if not price_file.exists():
-                        raise FileNotFoundError(f"Failed to create price data file: {price_file}")
-                    
-                    saved_path = str(price_file.absolute())
-                    result['saved_files'].append(saved_path)
-                    # Keep both raw DataFrame (for plotting) and a JSON-serializable
-                    # representation for the aggregated result.
-                    try:
-                        result['price_history'] = stock_data['history']
-                    except Exception:
-                        result['price_history'] = None
-                    result['price_data'] = stock_data['history'].to_dict(orient='records')
-                    logger.info(f"Successfully saved price data to {saved_path}")
-                except Exception as e:
-                    error_msg = f"Failed to save price data: {str(e)}"
-                    logger.error(error_msg, exc_info=True)
-                    result['error'] = error_msg
-        except Exception as e:
-            error_msg = f"Error fetching stock data for {ticker}: {str(e)}"
-            logger.error(error_msg, exc_info=True)
-            result['error'] = error_msg
-        
-        # 2. Fetch and analyze news
-        logger.info(f"Fetching news for {ticker}...")
-        try:
-            news = fetch_news_rss(ticker, num_articles)
-            
-            if not news:
-                logger.warning(f"No news articles found for {ticker}")
-            else:
-                logger.info(f"Analyzing sentiment for {len(news)} articles...")
-                analyzed_news = batch_analyze(news)
-                
-                if not analyzed_news:
-                    logger.warning("No articles were successfully analyzed")
-                else:
-                    result['news'] = analyzed_news
-                    result['sentiment'] = calculate_sentiment_metrics(analyzed_news)
-
-                    # Build a sentiment DataFrame (date -> sentiment score) for plotting
-                    try:
-                        sent_df = pd.DataFrame([
-                            {
-                                'date': a.get('date') if a.get('date') is not None else a.get('analysis_timestamp'),
-                                'sentiment': a.get('sentiment', 0.0),
-                                'title': a.get('title', '')
-                            }
-                            for a in analyzed_news
-                        ])
-                        if not sent_df.empty:
-                            # Convert date column to datetime and set as index
-                            sent_df['date'] = pd.to_datetime(sent_df['date'], errors='coerce')
-                            # If all dates are NaT, keep numeric index
-                            if sent_df['date'].notna().any():
-                                sent_df = sent_df.set_index('date').sort_index()
-                            result['sentiment_data'] = sent_df
-                        else:
-                            result['sentiment_data'] = pd.DataFrame()
-                    except Exception:
-                        result['sentiment_data'] = pd.DataFrame()
-                    
-                    # Save news data
-                    news_file = ticker_dir / f"{ticker}_news_{timestamp}.json"
-                    try:
-                        saved_path = save_report(analyzed_news, news_file)
-                        result['saved_files'].append(str(saved_path))
-                    except Exception as e:
-                        error_msg = f"Failed to save news data: {str(e)}"
-                        logger.error(error_msg, exc_info=True)
-                        if not result.get('error'):
-                            result['error'] = error_msg
-        except Exception as e:
-            error_msg = f"Error processing news for {ticker}: {str(e)}"
-            logger.error(error_msg, exc_info=True)
-            if not result.get('error'):  # Only set if no previous error
-                result['error'] = error_msg
-        
-        # 3. Always generate and save summary, even if some parts failed
-        try:
-            logger.info("Generating summary report...")
-            # Use safe defaults in case parts of the result are None
-            price_data_list = result.get('price_data') or []
-            news_list = result.get('news') or []
-
-            summary = {
-                'ticker': result['ticker'],
-                'timestamp': result['timestamp'],
-                'price_data_points': len(price_data_list),
-                'news_articles_analyzed': len(news_list),
-                'sentiment_summary': result.get('sentiment', {}),
-                'saved_files': result.get('saved_files', []),
-                'error': result.get('error')
+def _build_sentiment_df(analyzed: List[Dict[str, Any]]) -> pd.DataFrame:
+    if not analyzed:
+        return pd.DataFrame()
+    rows = []
+    for a in analyzed:
+        ts = a.get("date") or a.get("published") or a.get("analysis_timestamp")
+        rows.append(
+            {
+                "date": ts,
+                "sentiment": a.get("sentiment", 0.0),
+                "title": a.get("title", ""),
             }
-            
-            summary_file = ticker_dir / f"{ticker}_summary_{timestamp}.json"
-            try:
-                saved_path = save_report(summary, summary_file)
-                result['saved_files'].append(str(saved_path))
-            except Exception as e:
-                error_msg = f"Failed to save summary report: {str(e)}"
-                logger.error(error_msg, exc_info=True)
-                if not result.get('error'):
-                    result['error'] = error_msg
-            
-            logger.info(f"Analysis complete. Generated {len(result['saved_files'])} report files for {ticker}")
-            
-        except Exception as e:
-            error_msg = f"Error generating summary for {ticker}: {str(e)}"
-            logger.error(error_msg, exc_info=True)
-            result['error'] = error_msg
-        
+        )
+    df = pd.DataFrame(rows)
+    if df.empty:
+        return df
+    df["date"] = pd.to_datetime(df["date"], errors="coerce")
+    if df["date"].notna().any():
+        df = df.set_index("date").sort_index()
+    return df
+
+
+def _analyze_single_ticker(
+    ticker: str,
+    period: str = "1y",
+    num_articles: int = 20,
+) -> Dict[str, Any]:
+    t = ticker.upper()
+    ts = datetime.now().isoformat()
+    ts_tag = datetime.now().strftime("%Y%m%d_%H%M%S")
+    out: Dict[str, Any] = {
+        "ticker": t,
+        "timestamp": ts,
+        "price_df": pd.DataFrame(),
+        "news_df": pd.DataFrame(),
+        "sentiment_df": pd.DataFrame(),
+        "sentiment_summary": {},
+        "saved_files": [],
+        "error": None,
+    }
+
+    ticker_dir = get_company_dir(t)
+
+    try:
+        stock_data = fetch_stock_data(t, period)
     except Exception as e:
-        error_msg = f"Unexpected error in aggregate_analysis for {ticker}: {str(e)}"
-        logger.error(error_msg, exc_info=True)
-        result['error'] = error_msg
-    
-    # Verify files were actually created
-    verified_files = []
-    for filepath in result.get('saved_files', []):
-        if Path(filepath).exists():
-            verified_files.append(filepath)
+        msg = f"Error fetching stock data for {t}: {e}"
+        logger.error(msg, exc_info=True)
+        out["error"] = msg
+        stock_data = None
+
+    if stock_data and isinstance(stock_data, dict) and "history" in stock_data:
+        hist = stock_data["history"]
+        if not hist.empty:
+            if not isinstance(hist, pd.DataFrame):
+                hist = pd.DataFrame(hist)
+            out["price_df"] = hist
+            csv_path = save_dataframe(hist.reset_index(), f"{t}_price_data_{ts_tag}", t)
+            out["saved_files"].append(str(csv_path))
+            out["price_data"] = hist.reset_index().to_dict(orient="records")
         else:
-            logger.warning(f"Expected file not found: {filepath}")
-    
-    result['saved_files'] = verified_files
-    
-    if not verified_files and not result.get('error'):
-        result['error'] = "No report files were generated. Check logs for details."
-    
-    return result
+            logger.warning("No price history for %s", t)
+    elif out["error"] is None:
+        out["error"] = f"No price data available for {t}"
+
+    try:
+        news_raw = fetch_news_rss(t, num_articles)
+    except Exception as e:
+        msg = f"Error fetching news for {t}: {e}"
+        logger.error(msg, exc_info=True)
+        if not out["error"]:
+            out["error"] = msg
+        news_raw = []
+
+    analyzed_rows: List[Dict[str, Any]] = []
+    if news_raw:
+        analyzed = batch_analyze(news_raw)
+        if isinstance(analyzed, pd.DataFrame):
+            news_df = analyzed.copy()
+            analyzed_rows = news_df.to_dict(orient="records")
+        else:
+            analyzed_rows = list(analyzed)
+            news_df = pd.DataFrame(analyzed_rows)
+        out["news_df"] = news_df
+        out["news"] = analyzed_rows
+        out["sentiment_summary"] = calculate_sentiment_metrics(analyzed_rows)
+        sent_df = _build_sentiment_df(analyzed_rows)
+        out["sentiment_df"] = sent_df
+        news_json_path = ticker_dir / f"{t}_news_{ts_tag}.json"
+        save_json(news_json_path, analyzed_rows)
+        out["saved_files"].append(str(news_json_path))
+    else:
+        out["news"] = []
+        out["sentiment_summary"] = {}
+
+    summary = {
+        "ticker": t,
+        "timestamp": ts,
+        "price_data_points": int(len(out.get("price_data", []))),
+        "news_articles_analyzed": int(len(out.get("news", []))),
+        "sentiment_summary": out.get("sentiment_summary", {}),
+        "saved_files": out.get("saved_files", []),
+        "error": out.get("error"),
+    }
+    summary_path = ticker_dir / f"{t}_summary_{ts_tag}.json"
+    save_json(summary_path, summary)
+    out["saved_files"].append(str(summary_path))
+
+    verified = []
+    for p in out["saved_files"]:
+        if Path(p).exists():
+            verified.append(p)
+        else:
+            logger.warning("Expected file not found: %s", p)
+    out["saved_files"] = verified
+
+    if not verified and not out["error"]:
+        out["error"] = "No report files were generated. Check logs."
+
+    return out
+
+
+def aggregate_analysis(
+    tickers: Union[str, List[str]],
+    period: str = "1y",
+    num_articles: int = 20,
+) -> Dict[str, Any]:
+    symbols = _normalize_tickers(tickers)
+    results: Dict[str, Any] = {}
+    for t in symbols:
+        try:
+            results[t] = _analyze_single_ticker(t, period=period, num_articles=num_articles)
+        except Exception as e:
+            msg = f"Unexpected error in aggregate_analysis for {t}: {e}"
+            logger.error(msg, exc_info=True)
+            results[t] = {
+                "ticker": t,
+                "timestamp": datetime.now().isoformat(),
+                "price_df": pd.DataFrame(),
+                "news_df": pd.DataFrame(),
+                "sentiment_df": pd.DataFrame(),
+                "sentiment_summary": {},
+                "saved_files": [],
+                "error": msg,
+            }
+    return results

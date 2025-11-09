@@ -1,0 +1,23 @@
+reports_dir: ./reports
+
+plot_dpi: 300
+plot_figsize: [12, 8]
+plot_style: ggplot
+save_plots: true
+
+respect_robots: true
+allow_paywalled: false
+request_timeout_sec: 10
+request_delay_sec: 1.0
+user_agent: Mozilla/5.0 (compatible; ApexAnalysisBot/1.0; +https://example.com/bot)
+
+cache_ttl_days: 1
+days_back_price: 30
+days_back_news: 7
+min_words_for_analysis: 40
+
+news_sources:
+  - name: Yahoo Finance
+    url: https://feeds.finance.yahoo.com/rss/2.0/headline
+  - name: CNN Money
+    url: https://rss.cnn.com/rss/money_latest.rss
