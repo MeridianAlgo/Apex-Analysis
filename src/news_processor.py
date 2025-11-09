@@ -1,26 +1,26 @@
 import time
 import feedparser
 import requests
+import pandas as pd
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 from urllib import robotparser
-import time
 from datetime import datetime
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 
 from src.utils import (
-    handle_errors, 
-    logger, 
-    clean_text, 
-    load_cache, 
-    cache_data
+    handle_errors,
+    logger,
+    clean_text,
+    load_cache,
+    cache_data,
 )
 from src.config import (
     RESPECT_ROBOTS,
     ALLOW_PAYWALLED,
     REQUEST_TIMEOUT_SEC,
     REQUEST_DELAY_SEC,
-    USER_AGENT
+    USER_AGENT,
 )
 
 def _robots_allows(url: str) -> bool:
@@ -166,3 +166,34 @@ def scrape_article_content(link: str) -> str:
     cleaned = clean_text(text)
     cache_data(cache_key, cleaned)
     return cleaned
+
+
+@handle_errors
+def fetch_news(ticker: str, num_articles: int = 20, include_content: bool = True) -> pd.DataFrame:
+    """
+    Convenience helper that returns a DataFrame of ticker news.
+    Optionally scrapes article bodies for downstream sentiment analysis.
+    """
+    articles = fetch_news_rss(ticker, num_articles)
+    if not articles:
+        return pd.DataFrame(columns=["title", "link", "date", "source", "content"])
+
+    enriched: List[Dict[str, Any]] = []
+    for article in articles:
+        content = ""
+        if include_content and article.get("link"):
+            content = scrape_article_content(article["link"])
+        enriched.append(
+            {
+                "title": article.get("title", ""),
+                "link": article.get("link", ""),
+                "date": article.get("date"),
+                "source": article.get("source", "Unknown"),
+                "content": content,
+            }
+        )
+
+    df = pd.DataFrame(enriched)
+    if not df.empty and "date" in df.columns:
+        df["date"] = pd.to_datetime(df["date"], errors="coerce")
+    return df
