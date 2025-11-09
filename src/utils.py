@@ -3,6 +3,7 @@ import logging
 import pickle
 import re
 import time
+from datetime import date, datetime
 from dataclasses import dataclass
 from functools import lru_cache, wraps
 from pathlib import Path
@@ -105,11 +106,19 @@ def get_latest_report(ticker: str) -> Optional[Dict[str, Path]]:
     return report_files or None
 
 
-def save_json(path: Path, data: Dict[str, Any]) -> Path:
-    """Save dict as pretty JSON."""
+def save_json(path: Path, data: Any) -> Path:
     safe_mkdir(path.parent)
+
+    def _default(o):
+        if isinstance(o, (datetime, date)):
+            return o.isoformat()
+        if isinstance(o, pd.Timestamp):
+            return o.isoformat()
+        return str(o)
+
     with path.open("w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
+        json.dump(data, f, indent=2, ensure_ascii=False, default=_default)
+
     logger.info("Saved JSON: %s", path)
     return path
 
