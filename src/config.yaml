@@ -1,0 +1,17 @@
+reports_dir: ./reports
+
+plot_dpi: 300
+plot_figsize: [12, 8]
+save_plots: true
+
+respect_robots: true
+
+cache_ttl_days: 1
+days_back_price: 30
+days_back_news: 7
+
+news_sources:
+  - name: Yahoo Finance
+    url: https://feeds.finance.yahoo.com/rss/2.0/headline
+  - name: CNN Money
+    url: https://rss.cnn.com/rss/money_latest.rss
