@@ -1,7 +1,50 @@
+# Python
 venv/
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.DS_Store
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Project specific
+cache/
+.cache/
+reports/
+*.log
 *.pkl
+
+# Environment
+.env
+.venv
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db
