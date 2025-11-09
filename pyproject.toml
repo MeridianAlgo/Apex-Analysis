@@ -40,12 +40,11 @@ dev = [
 apex-analysis = "src.ui:run_cli"
 
 [tool.setuptools]
-package-dir = { "" = "." }
-packages = find:
+package-dir = { "" = "src" }
 
 [tool.setuptools.packages.find]
-where = ["."]
-include = ["src"]
+where = ["src"]
+include = ["*"]
 exclude = ["tests", "*.tests", "*.tests.*"]
 
 [tool.black]
