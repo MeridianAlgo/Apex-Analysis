@@ -123,22 +123,61 @@ def save_json(path: Path, data: Any) -> Path:
     return path
 
 
-def save_dataframe(df: pd.DataFrame, filename: str, ticker: Optional[str] = None) -> Path:
+def save_dataframe(
+    df: pd.DataFrame,
+    filename: str,
+    ticker: Optional[str] = None,
+    compress: bool = False,
+    optimize: bool = True
+) -> Path:
     """
-    Save DataFrame as CSV.
-    If ticker is provided, file goes under that ticker's report dir.
-    """
-    if not filename.lower().endswith(".csv"):
-        filename += ".csv"
+    Save DataFrame with optional compression and optimization.
 
+    Args:
+        df: DataFrame to save
+        filename: Output filename
+        ticker: Optional ticker for organized storage
+        compress: Whether to use compression (parquet or gzip)
+        optimize: Whether to optimize data types before saving
+
+    Returns:
+        Path to saved file
+    """
     if ticker:
         base_dir = get_company_dir(ticker)
     else:
         base_dir = REPORTS_DIR
 
+    # Import here to avoid circular dependency
+    if compress and optimize:
+        try:
+            from src.data_handler import save_dataframe_compressed
+            path = base_dir / filename
+            return save_dataframe_compressed(df, path, compression='gzip', optimize_dtypes=True)
+        except ImportError:
+            logger.warning("data_handler not available, using standard save")
+
+    # Optimize dtypes if requested
+    if optimize:
+        try:
+            from src.data_handler import optimize_dataframe_dtypes
+            df = optimize_dataframe_dtypes(df)
+        except ImportError:
+            pass
+
+    # Standard CSV save
+    if not filename.lower().endswith(".csv"):
+        filename += ".csv"
+
     path = base_dir / filename
     safe_mkdir(path.parent)
-    df.to_csv(path, index=False)
+
+    if compress:
+        path = path.with_suffix('.csv.gz')
+        df.to_csv(path, index=False, compression='gzip')
+    else:
+        df.to_csv(path, index=False)
+
     logger.info("Saved CSV: %s (rows=%s)", path, len(df))
     return path
 
@@ -285,3 +324,43 @@ def cache_key(key: str) -> str:
     This doesn't store payloads on disk; it just normalizes keys.
     """
     return key
+
+
+def memoize_dataframe(func: Callable) -> Callable:
+    """
+    Decorator to cache DataFrame operations using a combination of
+    hash-based caching for DataFrames and function arguments.
+    """
+    cache: Dict[str, Any] = {}
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        # Create cache key from function name and arguments
+        key_parts = [func.__name__]
+
+        for arg in args:
+            if isinstance(arg, pd.DataFrame):
+                # For DataFrames, use shape and column names as part of key
+                key_parts.append(f"df_{arg.shape}_{tuple(arg.columns)}")
+            else:
+                key_parts.append(str(arg))
+
+        for k, v in sorted(kwargs.items()):
+            key_parts.append(f"{k}={v}")
+
+        cache_key_str = "_".join(str(p) for p in key_parts)
+
+        if cache_key_str in cache:
+            return cache[cache_key_str]
+
+        result = func(*args, **kwargs)
+        cache[cache_key_str] = result
+
+        # Limit cache size to prevent memory issues
+        if len(cache) > 100:
+            # Remove oldest entry (simple FIFO)
+            cache.pop(next(iter(cache)))
+
+        return result
+
+    return wrapper

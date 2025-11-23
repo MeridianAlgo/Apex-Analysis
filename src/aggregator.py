@@ -32,27 +32,49 @@ def _normalize_tickers(tickers: Union[str, List[str]]) -> List[str]:
 def calculate_sentiment_metrics(rows):
     if not rows:
         return {}
+
+    # Single-pass optimization: collect scores and keywords together
     scores = []
+    keywords = set()
     for r in rows:
         s = r.get("sentiment")
         if isinstance(s, (int, float)):
             scores.append(float(s))
-    if not scores:
-        return {}
-    keywords = set()
-    for r in rows:
+
         kws = r.get("sentiment_keywords")
         if isinstance(kws, (list, tuple, set)):
-            for kw in kws:
-                keywords.add(str(kw))
+            keywords.update(str(kw) for kw in kws)
+
+    if not scores:
+        return {}
+
+    # Single-pass categorization using counters
+    strongly_positive = 0
+    positive = 0
+    neutral = 0
+    negative = 0
+    strongly_negative = 0
+
+    for s in scores:
+        if s >= 0.15:
+            strongly_positive += 1
+        elif s >= 0.05:
+            positive += 1
+        elif s > -0.05:
+            neutral += 1
+        elif s > -0.15:
+            negative += 1
+        else:
+            strongly_negative += 1
+
     return {
         "average": float(np.mean(scores)),
         "count": len(scores),
-        "strongly_positive": len([s for s in scores if s >= 0.15]),
-        "positive": len([s for s in scores if 0.05 <= s < 0.15]),
-        "neutral": len([s for s in scores if -0.05 < s < 0.05]),
-        "negative": len([s for s in scores if -0.15 < s <= -0.05]),
-        "strongly_negative": len([s for s in scores if s <= -0.15]),
+        "strongly_positive": strongly_positive,
+        "positive": positive,
+        "neutral": neutral,
+        "negative": negative,
+        "strongly_negative": strongly_negative,
         "keywords": list(keywords),
     }
 

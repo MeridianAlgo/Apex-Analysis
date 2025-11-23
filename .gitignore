@@ -29,6 +29,7 @@ MANIFEST
 # Project specific
 cache/
 .cache/
+data/
 reports/
 *.log
 *.pkl

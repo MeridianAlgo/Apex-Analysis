@@ -6,6 +6,13 @@ from src.config import DAYS_BACK_PRICE
 from src.utils import handle_errors, logger, load_cache, cache_data, retry, cache_key
 from src.technical_analysis import add_all_indicators
 
+try:
+    from src.cache_manager import cache_result
+    CACHE_AVAILABLE = True
+except ImportError:
+    CACHE_AVAILABLE = False
+    cache_result = lambda **kwargs: lambda f: f  # No-op decorator
+
 @handle_errors
 def fetch_stock_history(ticker: str, period: str = '1y') -> pd.DataFrame:
     """Fetch stock history without caching."""

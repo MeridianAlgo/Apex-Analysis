@@ -4,12 +4,10 @@ from pathlib import Path
 
 def main():
     try:
-        # Add the project root to Python path
         project_root = str(Path(__file__).parent.absolute())
         if project_root not in sys.path:
             sys.path.insert(0, project_root)
 
-        # Now import and run the application
         from src.ui import run_cli
         
         print("\n" + "="*50)

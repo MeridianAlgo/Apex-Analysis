@@ -104,6 +104,12 @@ Open `src/config.py` to change behavior. Important options:
 
 To change the reports path, edit `REPORTS_DIR` in `src/config.py`. The code will create the directory automatically.
 
+### Secrets & credentials
+
+- The REST API generates local users (admin/demo) on first run and stores them under `data/users.json`.  
+- The entire `data/` directory is ignored by git so API keys and refresh tokens never leave your machine.  
+- If you need to reset credentials, delete `data/users.json` and restart the web app to recreate fresh keys.
+
 ## Running non-interactively (examples)
 
 Generate a single analysis run for `NVDA` and exit:
@@ -193,5 +199,4 @@ Below are direct links to the key source files used by this project. Click the f
 - [src/utils.py](src/utils.py) — helper functions for saving/loading and logging
 - [CONTRIBUTORS.md](CONTRIBUTORS.md) — contributor list & contribution guidelines
 - [SECURITY.md](SECURITY.md) — vulnerability disclosure policy
-
 

@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Backtesting - Apex Analysis{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto space-y-8">
+    <h1 class="text-4xl font-bold">Backtesting</h1>
+
+    <div class="card rounded-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4">Run Backtest</h2>
+        <form id="backtest-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium mb-2">Ticker</label>
+                <input type="text" id="bt-ticker" value="AAPL" class="w-full px-4 py-2 rounded-md border dark:bg-gray-700">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Period</label>
+                <select id="bt-period" class="w-full px-4 py-2 rounded-md border dark:bg-gray-700">
+                    <option value="1y">1 Year</option>
+                    <option value="2y">2 Years</option>
+                    <option value="5y">5 Years</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Initial Capital ($)</label>
+                <input type="number" id="bt-capital" value="100000" class="w-full px-4 py-2 rounded-md border dark:bg-gray-700">
+            </div>
+
+            <div class="flex items-end">
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-md">
+                    Run Backtest
+                </button>
+            </div>
+        </form>
+
+        <div id="bt-loading" class="hidden text-center py-4">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+    </div>
+
+    <div id="bt-results" class="hidden space-y-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="bt-metrics"></div>
+        <div class="card rounded-lg p-6">
+            <h3 class="text-xl font-semibold mb-4">Equity Curve</h3>
+            <div id="equity-chart"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('backtest-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const ticker = document.getElementById('bt-ticker').value;
+    const period = document.getElementById('bt-period').value;
+    const capital = document.getElementById('bt-capital').value;
+
+    document.getElementById('bt-loading').classList.remove('hidden');
+    document.getElementById('bt-results').classList.add('hidden');
+
+    try {
+        const response = await fetch('/api/backtest', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ticker, period, initial_capital: capital})
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            displayBacktestResults(data);
+        } else {
+            alert('Error: ' + data.error);
+        }
+    } catch (error) {
+        alert('Error running backtest: ' + error.message);
+    } finally {
+        document.getElementById('bt-loading').classList.add('hidden');
+    }
+});
+
+function displayBacktestResults(data) {
+    const m = data.metrics;
+
+    const metricsHtml = `
+        <div class="card rounded-lg p-4">
+            <div class="text-sm text-gray-600 dark:text-gray-400">Total Return</div>
+            <div class="text-2xl font-bold ${m.total_return >= 0 ? 'text-green-600' : 'text-red-600'}">
+                ${(m.total_return * 100).toFixed(2)}%
+            </div>
+        </div>
+
+        <div class="card rounded-lg p-4">
+            <div class="text-sm text-gray-600 dark:text-gray-400">Sharpe Ratio</div>
+            <div class="text-2xl font-bold">${m.sharpe_ratio.toFixed(2)}</div>
+        </div>
+
+        <div class="card rounded-lg p-4">
+            <div class="text-sm text-gray-600 dark:text-gray-400">Max Drawdown</div>
+            <div class="text-2xl font-bold text-red-600">${(m.max_drawdown * 100).toFixed(2)}%</div>
+        </div>
+
+        <div class="card rounded-lg p-4">
+            <div class="text-sm text-gray-600 dark:text-gray-400">Win Rate</div>
+            <div class="text-2xl font-bold">${(m.win_rate * 100).toFixed(1)}%</div>
+        </div>
+    `;
+
+    document.getElementById('bt-metrics').innerHTML = metricsHtml;
+
+    // Equity curve
+    const trace = {
+        x: data.equity_curve.dates,
+        y: data.equity_curve.values,
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Portfolio Value',
+        line: {color: '#3b82f6', width: 2}
+    };
+
+    const layout = {
+        title: 'Portfolio Equity Curve',
+        xaxis: {title: 'Date'},
+        yaxis: {title: 'Value ($)'},
+        template: 'plotly_white'
+    };
+
+    Plotly.newPlot('equity-chart', [trace], layout, {responsive: true});
+
+    document.getElementById('bt-results').classList.remove('hidden');
+}
+</script>
+{% endblock %}

@@ -135,31 +135,32 @@ def calculate_volume_indicators(df):
 def calculate_volatility(df, period=20):
     """
     Calculate volatility metrics
-    
+
     Volatility measures how much the price jumps around
     - High volatility: Risky, big price swings
     - Low volatility: Stable, small price changes
-    
+
     Args:
         df: DataFrame with 'Close' and 'High'/'Low' columns
         period: Period for calculations (default 20)
-    
+
     Returns:
         DataFrame with volatility metrics
     """
-    # Standard deviation of returns
+    # Standard deviation of returns - optimized
     df['Returns'] = df['Close'].pct_change()
-    df['Volatility'] = df['Returns'].rolling(window=period).std()
-    
-    # Average True Range (ATR)
+    df['Volatility'] = df['Returns'].rolling(window=period, min_periods=1).std()
+
+    # Average True Range (ATR) - vectorized calculation
+    close_shifted = df['Close'].shift()
     high_low = df['High'] - df['Low']
-    high_close = np.abs(df['High'] - df['Close'].shift())
-    low_close = np.abs(df['Low'] - df['Close'].shift())
-    
-    ranges = pd.concat([high_low, high_close, low_close], axis=1)
-    true_range = np.max(ranges, axis=1)
-    df['ATR'] = true_range.rolling(period).mean()
-    
+    high_close = (df['High'] - close_shifted).abs()
+    low_close = (df['Low'] - close_shifted).abs()
+
+    # Use numpy maximum for element-wise max (more efficient than pd.concat + np.max)
+    true_range = np.maximum(high_low, np.maximum(high_close, low_close))
+    df['ATR'] = pd.Series(true_range, index=df.index).rolling(period, min_periods=1).mean()
+
     logger.info(f"✓ Calculated volatility (period={period})")
     return df
 

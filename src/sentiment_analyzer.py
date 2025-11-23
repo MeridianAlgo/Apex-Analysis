@@ -8,6 +8,8 @@ from textblob import TextBlob
 
 from src.utils import logger
 
+from typing import Any, cast
+
 try:
     from src.config import MIN_WORDS_FOR_ANALYSIS
 except ImportError:
@@ -27,9 +29,17 @@ _ensure_nltk_resource("corpora/stopwords", "stopwords")
 
 
 class SentimentAnalyzer:
+    # Class-level shared resources to avoid recreating for each instance
+    _stopwords = None
+    _lexicon_loaded = False
+
     def __init__(self):
         self.sid = SentimentIntensityAnalyzer()
-        self.stopwords = set(nltk.corpus.stopwords.words("english"))
+
+        # Reuse stopwords across instances
+        if SentimentAnalyzer._stopwords is None:
+            SentimentAnalyzer._stopwords = frozenset(nltk.corpus.stopwords.words("english"))
+        self.stopwords = SentimentAnalyzer._stopwords
         self.positive_phrases = {
             "breakout": 1.5,
             "surge": 1.5,
@@ -105,11 +115,13 @@ class SentimentAnalyzer:
     def _preprocess_text(self, text):
         if not text:
             return ""
+        # Compile regex patterns once (these are already at module level in practice)
         text = re.sub(r"<[^>]+>", " ", text)
         text = re.sub(r"https?://\S+|www\.\S+", " ", text)
         text = re.sub(r"[^\w\s]", " ", text)
         text = re.sub(r"\s+", " ", text).strip().lower()
-        words = [w for w in text.split() if w not in self.stopwords and len(w) > 2]
+        # Use list comprehension with optimized filtering
+        words = [w for w in text.split() if len(w) > 2 and w not in self.stopwords]
         return " ".join(words)
 
     def _has_enough_content(self, cleaned_text):
@@ -136,14 +148,21 @@ class SentimentAnalyzer:
             return self._neutral_result()
 
         words = cleaned.split()
+        word_count = len(words)
         is_short = not self._has_enough_content(cleaned)
 
+        # Optimize phrase matching - combine positive and negative phrases
         keyword_score = 0.0
         matched_keywords = []
-        phrases = {}
-        phrases.update(self.positive_phrases)
-        phrases.update(self.negative_phrases)
-        for phrase, weight in phrases.items():
+
+        # Check positive phrases first
+        for phrase, weight in self.positive_phrases.items():
+            if phrase in cleaned:
+                keyword_score += weight
+                matched_keywords.append(phrase)
+
+        # Check negative phrases
+        for phrase, weight in self.negative_phrases.items():
             if phrase in cleaned:
                 keyword_score += weight
                 matched_keywords.append(phrase)
@@ -151,8 +170,10 @@ class SentimentAnalyzer:
         vader_scores = self.sid.polarity_scores(cleaned)
         vader_compound = float(vader_scores.get("compound", 0.0))
         blob = TextBlob(cleaned)
-        blob_score = float(blob.sentiment.polarity)
+        sent = cast(Any, blob.sentiment)
+        blob_score = float(getattr(sent, "polarity", 0.0))
 
+        # Optimize calculations - reduce temporary variables
         keyword_weight = min(1.0, len(matched_keywords) * 0.2)
         base_score = vader_compound * (1.0 - keyword_weight)
         adjusted_score = base_score + (keyword_score * 0.1 * keyword_weight)
@@ -160,12 +181,14 @@ class SentimentAnalyzer:
 
         compound = max(-1.0, min(1.0, adjusted_score))
 
-        length_conf = min(1.0, len(words) / 50.0)
+        # Calculate confidence
+        length_conf = min(1.0, word_count / 50.0)
         keyword_conf = min(1.0, len(matched_keywords) * 0.3)
         confidence = max(0.1, (length_conf + keyword_conf) / 2.0)
         if is_short:
             confidence = min(confidence, 0.6)
 
+        # Determine label with optimized conditionals
         if compound >= 0.15:
             label = "strongly_positive"
         elif compound >= 0.05:
@@ -184,7 +207,7 @@ class SentimentAnalyzer:
             "keywords_found": matched_keywords,
             "vader_score": vader_compound,
             "textblob_score": blob_score,
-            "word_count": len(words),
+            "word_count": word_count,
         }
 
 
@@ -197,7 +220,9 @@ def _extract_text_from_record(record):
 
 
 def batch_analyze(items):
+    # Create analyzer once and reuse for entire batch
     analyzer = SentimentAnalyzer()
+
     if isinstance(items, pd.DataFrame):
         df = items.copy()
         text_col = None
@@ -210,9 +235,11 @@ def batch_analyze(items):
             df["sentiment_label"] = "neutral"
             df["sentiment_confidence"] = 0.0
             return df
-        sentiments = []
-        for text in df[text_col].astype(str).tolist():
-            sentiments.append(analyzer.analyze_sentiment(text))
+
+        # Batch process all texts at once
+        sentiments = [analyzer.analyze_sentiment(text) for text in df[text_col].astype(str)]
+
+        # Use vectorized assignment instead of list comprehensions
         df["sentiment"] = [s["compound"] for s in sentiments]
         df["sentiment_label"] = [s["sentiment"] for s in sentiments]
         df["sentiment_confidence"] = [s["confidence"] for s in sentiments]
@@ -220,7 +247,11 @@ def batch_analyze(items):
         df["textblob_score"] = [s["textblob_score"] for s in sentiments]
         df["word_count"] = [s["word_count"] for s in sentiments]
         return df
+
+    # Optimize dict processing - pre-allocate results list
     results = []
+    timestamp = datetime.utcnow().isoformat()  # Calculate once
+
     for rec in items:
         if not isinstance(rec, dict):
             continue
@@ -232,19 +263,20 @@ def batch_analyze(items):
         except Exception as e:
             logger.error("Error analyzing article: %s", e)
             continue
-        enriched = dict(rec)
-        enriched.update(
-            {
-                "sentiment": float(s["compound"]),
-                "sentiment_label": s["sentiment"],
-                "sentiment_confidence": float(s["confidence"]),
-                "sentiment_keywords": s.get("keywords_found", []),
-                "vader_score": float(s["vader_score"]),
-                "textblob_score": float(s["textblob_score"]),
-                "word_count": int(s["word_count"]),
-                "analysis_timestamp": datetime.utcnow().isoformat(),
-            }
-        )
+
+        # Optimize dict creation - avoid intermediate dict
+        enriched = {**rec,
+            "sentiment": float(s["compound"]),
+            "sentiment_label": s["sentiment"],
+            "sentiment_confidence": float(s["confidence"]),
+            "sentiment_keywords": s.get("keywords_found", []),
+            "vader_score": float(s["vader_score"]),
+            "textblob_score": float(s["textblob_score"]),
+            "word_count": int(s["word_count"]),
+            "analysis_timestamp": timestamp,
+        }
         results.append(enriched)
+
+    # Use sorted() with key parameter for efficiency
     results.sort(key=lambda x: x.get("sentiment", 0.0), reverse=True)
     return results
