@@ -1,40 +1,105 @@
-# Apex Analysis
+# 📈 Apex Analysis
 
-A comprehensive stock analysis tool that combines price data with news sentiment analysis to provide insights into stock performance.
-# Apex Analysis
+**A professional stock analysis platform with ML-powered insights, beautiful visualizations, and comprehensive trading tools.**
 
-Apex Analysis is a command-line stock analysis tool that combines historical price data with news sentiment analysis and generates automated reports (CSV, JSON and PNG visualizations).
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=Streamlit&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-This README contains a full project overview, a complete file tree, setup and run instructions, where to find generated reports, configuration details, and links to every important file in the repository.
+## ✨ Features
 
-## Quick start
+- 📊 **Real-time Stock Analysis** - Live data with technical indicators
+- 🎨 **Modern UI** - Beautiful, professional Streamlit dashboard
+- 🔔 **Smart Alerts** - Automatic detection of trading signals
+- 🔄 **Backtesting** - Test strategies on historical data
+- ⚠️ **Risk Management** - VaR, CVaR, drawdown analysis
+- 📥 **Data Export** - CSV, JSON, Excel, Parquet formats
+- 📈 **Interactive Charts** - Candlestick, indicators, volume analysis
 
-1. Clone the repository and change into it:
+## 🚀 Quick Start
+
+### Option 1: Run the Modern Web Dashboard (Recommended)
 
 ```bash
+# Clone the repository
 git clone <repo-url> apex-analysis
 cd apex-analysis
-```
 
-2. Install dependencies:
-
-```bash
+# Install dependencies
 pip install -r requirements.txt
+
+# Launch the Streamlit dashboard
+streamlit run streamlit_app.py
 ```
 
-3. Run the app (interactive CLI):
+**Or simply double-click `run_app.bat` on Windows!**
+
+The dashboard will open at `http://localhost:8501`
+
+### Option 2: Command-Line Interface
 
 ```bash
+# Run the interactive CLI
 python main.py
 ```
 
-Type a ticker symbol (for example `NVDA`, `AAPL`) and press Enter. The program will fetch price and news data, analyze sentiment, and save results in the `reports/` folder.
+Type a ticker symbol (e.g., `AAPL`, `GOOGL`) and press Enter.
 
-You can also run the package as a module:
+## 🎨 Streamlit Dashboard Features
 
-```bash
-python -m src
-```
+The modern web dashboard (`streamlit_app.py`) provides a professional, interactive interface:
+
+### 📊 Dashboard Page
+- **Watchlist Overview**: Real-time metrics for your favorite stocks
+- **Quick Stats**: Price, change %, and trend indicators
+- **Analysis History**: Track your recent analyses
+
+### 📈 Analysis Page
+- **Beautiful Charts**: Interactive candlestick and technical indicator charts
+- **Smart Alerts**: Automatic detection of:
+  - 🚀 Moving average crossovers (bullish/bearish)
+  - 📊 RSI overbought/oversold conditions
+  - 📢 Volume spikes
+  - 🎯 52-week high/low proximity
+  - 📈 MACD crossovers
+  - 💰 Significant price movements
+- **Technical Indicators**: RSI, MACD, MA20, MA50, Bollinger Bands
+- **Key Metrics**: Live price, volume, 52-week ranges
+
+### 🔄 Backtesting Page
+- **Strategy Testing**: MA Crossover, RSI Mean Reversion, MACD Momentum
+- **Performance Metrics**:
+  - Total & Annualized Returns
+  - Sharpe & Sortino Ratios
+  - Maximum Drawdown
+  - Win Rate & Total Trades
+- **Equity Curve**: Visual representation of portfolio value over time
+
+### ⚠️ Risk Management Page
+- **Value at Risk (VaR)**: 95% and 99% confidence levels
+- **Conditional VaR (CVaR)**: Expected shortfall analysis
+- **Drawdown Analysis**: Visual drawdown chart
+- **Returns Distribution**: Histogram of daily returns
+- **Risk-Adjusted Returns**: Sharpe and Sortino ratios
+
+### 🔔 Alerts Page
+- **Automatic Alerts**: Generated during stock analysis
+- **Custom Alerts**: Set your own price, change, or volume thresholds
+- **Alert Management**: View and remove active alerts
+
+### 📥 Data Export Page
+- **Multiple Formats**: CSV, JSON, Excel (.xlsx), Parquet
+- **Flexible Options**: Include/exclude technical indicators
+- **Data Preview**: See your data before downloading
+- **One-Click Download**: Export with timestamp and ticker
+
+## 🚀 Deployment
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions on:
+- Deploying to Streamlit Cloud (FREE)
+- Running locally
+- Configuration options
+- Troubleshooting
 
 ## Where reports are saved
 

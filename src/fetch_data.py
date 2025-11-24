@@ -16,12 +16,24 @@ except ImportError:
 @handle_errors
 def fetch_stock_history(ticker: str, period: str = '1y') -> pd.DataFrame:
     """Fetch stock history without caching."""
-    logger.info(f"Fetching history for {ticker}")
+    logger.info(f"Fetching history for {ticker} (period={period})")
     try:
-        data = yf.Ticker(ticker).history(period=period)
+        # Use yf.download for better reliability with 'max' period
+        if period == 'max':
+            data = yf.download(ticker, period="max", progress=False)
+        else:
+            data = yf.Ticker(ticker).history(period=period)
+            
         if data.empty:
             logger.warning(f"No data returned for {ticker}")
             return data
+        
+        # Ensure index is DatetimeIndex and sorted
+        if not isinstance(data.index, pd.DatetimeIndex):
+            data.index = pd.to_datetime(data.index)
+        data = data.sort_index()
+            
+        logger.info(f"Fetched {len(data)} rows. Range: {data.index[0]} to {data.index[-1]}")
         
         # Add technical indicators
         data = add_all_indicators(data)
